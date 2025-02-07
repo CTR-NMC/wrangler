@@ -4,20 +4,20 @@ This guide will walk the user through the API calls used to make the Work Zone A
 ## Four Areas of Focus (Sub-routes)
 Each area of focus has various calls associated with them to help the user get the expected output.
 * [Corridors](#corridors-2-calls)
-  - Get Corridors
-  - Get Corridor Date Range
+  - [Get Corridors](#1-get-corridors-found-in-corridorspy)
+  - [Get Corridor Date Range](#2-get-corridor-date-range-found-in-corridorspy)
 * [Segments](#segments-1-call)
-  - Get Segments
+  - [Get Segments](#1-get-segments-found-in-segmentspy)
 * [Timing](#timing-3-calls)
-  - Get Travel Times
-  - Calculate Travel Time Indices
-  - Calculate Free Flow Travel Time
+  - [Get Travel Times](#1-get-travel-times-found-in-timingpy)
+  - [Calculate Travel Time Indices](#2-calculate-travel-time-index-found-in-timingpy)
+  - [Calculate Free Flow Travel Time](#3-calculate-free-flow-travel-time-found-in-timingpy)
 * [Workzone](#workzone-5-calls)
-  - Get Work Zone Date Range
-  - Get Active Work Zones
-  - Get The Updated Work Zones
-  - Get Work Zone to INRIX Segments Mapping
-  - Get Work Zome to INRIX Corridor Mapping
+  - [Get Work Zone Date Range](#1-get-work-zone-date-range-found-in-workzonepy)
+  - [Get Active Work Zones](#2-get-active-work-zones-found-in-workzonepy)
+  - [Get The Updated Work Zones](#3-get-the-updated-work-zones-found-in-workzonepy)
+  - [Get Work Zone to INRIX Segments Mapping](#4-get-work-zone-to-inrix-segments-mapping-found-in-workzonepy)
+  - [Get Work Zome to INRIX Corridor Mapping](#5-get-work-zone-to-inrix-corridor-mapping-found-in-workzonepy)
 
 ## [Corridors](https://github.com/TACC/ridi-api/blob/jan_dev/project/app/routers/corridors/corridors.py) (2 calls)
 This set is intended to list the corridors (using stored procedure **_get_corrs_info0_**) and their respective date ranges (using stored procedure **_get_ixdata_daterange0_**).
@@ -78,7 +78,7 @@ http://129.114.38.150/v1/corridors/txdot-aus?map_ver=2401&geog_flag=false
 #### '_Work Zone Web App_' use case:
 This call runs everytime the user selects a new direction and/or deck-level. Based on this input, it will determine the corridor id and save it for later analysis.
 
-![image](./doc_content/wz_app_corridor_selection.png)
+![Alt Text](./wz_app_corridor_selection.png)
 
 ### 2.) Get Corridor Date Range (found in [corridors.py](https://github.com/TACC/ridi-api/blob/jan_dev/project/app/routers/corridors/corridors.py#L38))
 This API call returns the date range (two timestamps denoting the earliest and latest dates available) for the corridor id given. **Note**: By default, the API call will assume a request of 15-minute aggregation.
@@ -109,7 +109,7 @@ http://129.114.38.150/v1/corridors/daterange/8c693a02-18d5-4aee-58ab-d6d681ca57a
 
 #### '_Work Zone Web App_' use case:
 This call depends on the selection of a corridor, so it also runs everytime the user selects a new direction or deck-level. Based on the corridor selected, the user will have the ability to select any frame of time within the date range returned by the API.<br/>
-![image](./doc_content/wz_app_analysis_date_range.png)
+![image](./wz_app_analysis_date_range.png)
 
 ## [Segments](https://github.com/TACC/ridi-api/blob/jan_dev/project/app/routers/segments/segments.py) (1 call)
 This set, which only contains one call at the moment, is intended to provide INRIX segments and other relevant information (using stored procedure **_get_corr_segs0_**)
@@ -164,7 +164,7 @@ http://129.114.36.28/v1/segments/8c693a02-18d5-4aee-58ab-d6d681ca57a9?geog_flag=
 
 #### '_Work Zone Web App_' use case:
 This call depends on the selection of a corridor, so it also runs everytime the user selects a new direction or deck-level. Based on the corridor selected, it is used to determine what shapefile to display in the map.<br/>
-![image](./doc_content/wz_app_corridor_selection_output.png)
+![image](./wz_app_corridor_selection_output.png)
 
 ## [Timing](https://github.com/TACC/ridi-api/blob/jan_dev/project/app/routers/timing/timing.py) (3 calls)
 This set is intended to provide calculated INRIX information regarding its average travel times (using stored procedure **_get_typical_tt_**), travel time heat map indices (using stored procedure **_get_avg_tti0_**) and free-flow time (using stored procedure **_get_fftt0_**).
@@ -221,8 +221,8 @@ http://129.114.38.150/v1/timing/traveltime/corridor/8c693a02-18d5-4aee-58ab-d6d6
 
 #### '_Work Zone Web App_' use case:
 This call depends on the "Calculate" button. Once it's clicked, the analysis information will be used to call the API call. Based on the corridor and analysis/reference dates, it is used to determine generate 2 plots (a side-by-side comparison and a delay visualization).<br/>
-![image](./doc_content/wz_app_custom_event_delay_plot.png)
-![image](./doc_content/wz_app_custom_event_analysis_plot.png)
+![image](./wz_app_custom_event_delay_plot.png)
+![image](./wz_app_custom_event_analysis_plot.png)
 
 ### 2.) Calculate Travel Time Index (found in [timing.py](https://github.com/TACC/ridi-api/blob/jan_dev/project/app/routers/timing/timing.py#L103))
 This API call returns a list of travel time indices that will denote the magnitude of travel time in comparison to the typical travel time for each 15-minute interval at the specified segment sequence. Each travel time index entry includes a segment id, timestamp, day of week, and travel time magnitude value. **Note**: By default, the API call will assume a request of 15-minute aggregation.
@@ -310,7 +310,7 @@ http://129.114.38.150/v1/workzone/daterange
 
 #### '_Work Zone Web App_' use case:
 This call does not depend on any arguments. It returns workzone closures everytime the application reloads. The date range is used to set the maximum and minimum dates available for the user to select.<br/>
-![image](./doc_content/wz_closures_date_range.png)
+![image](./wz_closures_date_range.png)
 
 ### 2.) Get Active Work Zones (found in [workzone.py](https://github.com/TACC/ridi-api/blob/jan_dev/project/app/routers/workzone/workzone.py#L118))
 This API call returns a list of active work zones based on their active range date and direction. Each work zone entry on that list includes its id, core details, start date, end date, verification information, closure characteristics, geographical information, and geography (in linestring format)
@@ -364,7 +364,7 @@ http://129.114.38.150/v1/workzone/inrix_closures/activedate/start/2024-04-14/end
 
 #### '_Work Zone Web App_' use case:
 This function depends on the "Get Closures" button. Once it's clicked, the date range will be used to gather the active work zones via the API call. As a result, all the collected work zones will be drawn on the map.<br/>
-![image](./doc_content/wz_closures.png)
+![image](./wz_closures.png)
 
 ### 3.) Get The Updated Work Zones (found in [workzone.py](https://github.com/TACC/ridi-api/blob/jan_dev/project/app/routers/workzone/workzone.py#L23))
 This API call returns a list of active work zones based on their update range date and direction. Each work zone entry on that list includes its id, core details, start date, end date, verification information, closure characteristics, geographical information, and geography (in linestring format)
@@ -457,7 +457,7 @@ http://129.114.38.150/v1/workzone/closures/activedate/start/2024-04-14/end/2024-
 
 #### '_Work Zone Web App_' use case:
 This call depends on the click of the map. Once a work zone is clicked (selected), the direction will be used to get the INRIX mapping and draw the segments that closely resemble the work zone.<br/>
-![image](./doc_content/wz_inrix_mapping.png)
+![image](./wz_inrix_mapping.png)
 
 ### 5.) Get Work Zone to INRIX Corridor Mapping (found in [workzone.py](https://github.com/TACC/ridi-api/blob/jan_dev/project/app/routers/workzone/workzone.py#L199))
 This API call returns a list of INRIX corridors in a study that are within the location of the workzone. Each INRIX corridor entry on that list includes its corridor id, segment sequences, total corridor distance, total workzone distance, and whether its direction is reversed.
